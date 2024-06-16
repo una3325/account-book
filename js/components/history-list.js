@@ -49,7 +49,7 @@ export function renderHistoryList() {
         .sort((a, b) => {
           b.id - a.id
         })
-        .map(({ description, category, amount, fundsAtTheTime, createAt }) => {
+        .map(({ description, category, amount, fundsAtTheTime, createAt,id }) => {
           //iso타입 -> 10:30 HH:mm
           const time = new Date(createAt).toLocaleTimeString('ko-kr', {
             timeStyle: 'short',
@@ -71,8 +71,8 @@ export function renderHistoryList() {
                   </p>
                 </div>
               </div>
-              <div class="delete-section">
-                <button class="delete-button">🗑</button>
+              <div class="delete-section" > 
+              <button class='delete-button'data-dateid=${dateId} data-itemid=${id} >🗑</button>
               </div>
             </section>
             <section class="history-item-caption">
