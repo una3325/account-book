@@ -39,54 +39,50 @@ export function renderHistoryList() {
   $sectionHistory.innerHTML = store.dateList
     .map(({ date, id: dateId }) => {
       const detail = store.detailList[dateId]
-      if (!detail?.length) return ''
-      // [1,2,3].map(_=>_) => [1,2,3] => '123'
-      // join('')
+      if (!detail?.length) return '' // 가드 클로저 기법
+
+      // 오름차순 정렬
+      detail.sort((a, b) => {
+        return b.id - a.id
+      })
 
       return `<article class="history-per-day">
       <p class="history-date">2021년 12월 1일</p>
-      ${detail
-        .sort((a, b) => {
-          b.id - a.id
-        })
-        .map(({ description, category, amount, fundsAtTheTime, createAt,id }) => {
-          //iso타입 -> 10:30 HH:mm
-          const time = new Date(createAt).toLocaleTimeString('ko-kr', {
+    ${detail
+      .map(
+        ({ description, category, amount, fundsAtTheTime, createAt, id }) => {
+          const fomattedTime = new Date(createAt).toLocaleTimeString('ko-kr', {
             timeStyle: 'short',
             hourCycle: 'h24',
           })
-
-          ;<section class="history-item">
-            <section class="history-item-column">
-              <div class="create-at">${time}</div>
-              <div class="history-detail">
-                <div class="history-detail-row history-detail-title">
-                  <p>${description}</p>
-                </div>
-                <div class="history-detail-row history-detail-subtitle">
-                  <p>${category}</p>
-                  <p>
-                    ${amount.toLocaleString()}
-                    <span>원</span>
-                  </p>
-                </div>
+          return `<section class='history-item'>
+          <section class='history-item-column'>
+            <div class='create-at'>${fomattedTime}</div>
+            <div class='history-detail'>
+              <div class='history-detail-row history-detail-title'>
+                <p>${description}</p>
               </div>
-              <div class="delete-section" > 
+              <div class='history-detail-row history-detail-subtitle'>
+                <p>${category}</p>
+                <p>${amount.toLocaleString()}<span>원</span></p>
+              </div>
+            </div>
+            <div class='delete-section' >
               <button class='delete-button'data-dateid=${dateId} data-itemid=${id} >🗑</button>
-              </div>
-            </section>
-            <section class="history-item-caption">
-              <p>
-                <span>남은 자산</span>
-                <span>${fundsAtTheTime.toLocaleString()}</span>
-                <span>원</span>
-              </p>
-            </section>
+            </div>
           </section>
-        })
-        .join('')}
-     
-
+          <section class='history-item-caption'>
+            <p>
+              <span>남은 자산</span>
+              <span>${fundsAtTheTime}</span>
+              <span>원</span>
+            </p>
+          </section>
+        </section>`
+        }
+      )
+      .join('')}
+      
     </article>`
     })
     .join('')
