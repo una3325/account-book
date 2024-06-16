@@ -27,41 +27,49 @@ export const store = {
     },
   ],
   detailList: {},
-};
+}
 
 export function updateStorage() {
-  sessionStorage.setItem("store", JSON.stringify(store));
+  sessionStorage.setItem('store', JSON.stringify(store))
 }
 
 export function initStore() {
-  const storage = sessionStorage.getItem("store");
-  if (!storage) updateStorage();
+  const storage = sessionStorage.getItem('store')
+  if (!storage) updateStorage()
 
   const { dateList, detailList, todayId, currentFunds, isFirstEdit } =
-    JSON.parse(storage);
+    JSON.parse(storage)
 
-  store.currentFunds = currentFunds;
-  store.isFirstEdit = isFirstEdit;
-  store.dateList = dateList;
-  store.detailList = detailList;
-  store.todayId = todayId;
+  store.currentFunds = currentFunds
+  store.isFirstEdit = isFirstEdit
+  store.dateList = dateList
+  store.detailList = detailList
+  store.todayId = todayId
 }
 
 export function addNewHistory(newHistory) {
   try {
+    console.log('newHistory', newHistory)
     // TODO:
     /**
      * - store의 detailList 새로 갱신
      * - store.currentFunds 새로 갱신
      */
-    store.detailList = null;
-    store.currentFunds = null;
+    if (store.detailList[todayId]) {
+      store.detailList[todayId].push(newHistory)
+    } else {
+      store.detailList[todayId] = [newHistory]
+    }
 
-    updateStorage();
-    return true;
+    // 현재 자산 - amount
+    store.currentFunds -= newHistory.amount
+    console.log('store', store)
+
+    updateStorage()
+    return true
   } catch (error) {
-    alert(error);
-    return false;
+    alert(error)
+    return false
   }
 }
 
@@ -72,12 +80,12 @@ export function removeHistory(dateId, itemId) {
      * - store의 detailList 새로 갱신
      * - store.currentFunds 새로 갱신
      */
-    store.detailList[dateId] = null;
+    store.detailList[dateId] = null
 
-    updateStorage();
-    return true;
+    updateStorage()
+    return true
   } catch (error) {
-    alert(error);
-    return false;
+    alert(error)
+    return false
   }
 }
